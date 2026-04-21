@@ -1,0 +1,9 @@
+interface:
+  display_name: Karpathy Codex
+  short_description: Requirement-first coding guardrails for Codex
+  category: developer-tools
+  tags:
+    - coding
+    - design-to-code
+    - review
+    - planning

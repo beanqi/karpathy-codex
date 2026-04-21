@@ -1,0 +1,35 @@
+# Working rules for this repository
+
+Follow this order for non-trivial work:
+1. Clarify the requirement.
+2. Propose the smallest viable design.
+3. Make a short implementation plan.
+4. Then write code.
+
+For tiny, obvious tasks, keep this flow brief rather than ceremonial.
+
+Before writing code:
+1. Read the relevant files first.
+2. Summarize the requirement, likely root cause, or implementation approach briefly.
+3. Reuse existing patterns in this repository.
+
+Coding principles:
+- Simplicity first.
+- Prefer the smallest viable design.
+- Avoid introducing new abstractions unless they are clearly needed now.
+- Preserve current architecture unless explicitly asked to redesign it.
+- Keep diffs minimal and easy to review.
+- Do not over-design, over-abstract, or add speculative fallback logic.
+
+Validation:
+- Run the smallest relevant tests first.
+- Summarize what changed, why, and how it was verified.
+- Call out risks, edge cases, and follow-up work.
+
+UI / design work:
+- Prefer existing design tokens and components.
+- Match nearby patterns before inventing new ones.
+- Keep spacing, typography, and states consistent with the current app.
+- Do not restyle unrelated areas while fixing a local issue.
+
+When relevant, use installed skills and configured MCP servers instead of guessing.
