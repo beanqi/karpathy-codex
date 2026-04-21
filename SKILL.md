@@ -1,6 +1,6 @@
 ---
 name: karpathy-codex
-description: "karpathy-style coding and implementation guardrails for codex. use when chatgpt or codex is asked to write, edit, refactor, review, debug, test, or explain code, or to implement ui from specs, screenshots, or design notes. apply this skill to keep work thoughtful, simple, and review-friendly: align on requirements before coding, discuss the smallest viable design before implementation, turn approved direction into a minimal plan, then code with small surgical diffs. strongly prefer existing repository patterns and explicitly avoid over-design, over-abstraction, and over-defensive fallback logic. especially useful for bug fixes, feature work, refactors, code review, ui polish, and design-to-code tasks where minimal, high-signal changes matter."
+description: "karpathy-style coding and design-decision guardrails for codex. use when chatgpt or codex is asked to do solution design, tradeoff analysis, architecture discussion, write, edit, refactor, review, debug, test, explain code, or implement ui from specs, screenshots, or design notes. apply this skill to keep work thoughtful, simple, and review-friendly: align on requirements before coding, discuss the smallest viable design before implementation, or produce a design-only recommendation with explicit tradeoffs when coding is not requested, then code with small surgical diffs when implementation is requested. strongly prefer existing repository patterns and explicitly avoid over-design, over-abstraction, and over-defensive fallback logic. especially useful for design decisions, bug fixes, feature work, refactors, code review, ui polish, and design-to-code tasks where minimal, high-signal changes matter."
 ---
 
 # Karpathy Codex
@@ -9,6 +9,7 @@ description: "karpathy-style coding and implementation guardrails for codex. use
 
 Use this skill as a coding stance and execution discipline, not as a framework-specific rulebook.
 Apply it alongside more specific repo instructions, framework guidance, tool-specific skills, and installed skills. Keep those more specific instructions when they conflict with this skill.
+This skill also applies when the user asks for design-only output (no code changes yet), especially when options and tradeoffs need to be evaluated.
 
 This skill combines two ideas into one reusable flow:
 
@@ -105,6 +106,8 @@ For non-trivial tasks, include:
 - the likely root cause or implementation approach
 - the files or layers likely to change
 - the smallest design that solves the problem
+- at least one alternative and why it is not preferred right now
+- explicit tradeoffs (complexity, risk, delivery speed, maintainability)
 - why broader alternatives are unnecessary right now
 
 Present the design in chunks small enough to review quickly.
@@ -122,6 +125,9 @@ A good plan:
 - is detailed enough to execute, but not bloated into project-management theater
 
 Prefer small, reviewable steps over long speculative roadmaps.
+
+If the user asks for design only, stop after requirements and design output.
+In that mode, do not force code edits; provide a concise recommendation with tradeoffs, assumptions, and a clear next implementation step.
 
 ### Phase 4: Implement carefully
 
