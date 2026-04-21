@@ -1,267 +1,226 @@
 ---
 name: karpathy-codex
-description: "karpathy-style coding and design-decision guardrails for codex. use when chatgpt or codex is asked to do solution design, tradeoff analysis, architecture discussion, write, edit, refactor, review, debug, test, explain code, or implement ui from specs, screenshots, or design notes. apply this skill to keep work thoughtful, simple, and review-friendly: align on requirements before coding, discuss the smallest viable design before implementation, or produce a design-only recommendation with explicit tradeoffs when coding is not requested, then code with small surgical diffs when implementation is requested. strongly prefer existing repository patterns and explicitly avoid over-design, over-abstraction, and over-defensive fallback logic. especially useful for design decisions, bug fixes, feature work, refactors, code review, ui polish, and design-to-code tasks where minimal, high-signal changes matter."
+description: "面向 Codex 的 karpathy 风格编码与设计决策护栏。适用于 ChatGPT 或 Codex 被要求进行方案设计、权衡分析、架构讨论、编写、编辑、重构、评审、调试、测试、代码讲解，或根据规格、截图、设计说明实现 UI 的场景。使用该 skill 可让工作更审慎、简洁、便于评审：先对齐需求，再讨论最小可行设计；若用户只要设计结论，则给出带明确权衡的设计建议；若需要落地实现，则采用小而精准的改动。明确避免过度设计、过度抽象与过度防御式兜底逻辑。尤其适用于设计决策、缺陷修复、功能开发、重构、代码评审、UI 打磨，以及强调最小高信号改动的设计到代码任务。"
 ---
 
 # Karpathy Codex
 
-## Overview
 
-Use this skill as a coding stance and execution discipline, not as a framework-specific rulebook.
-Apply it alongside more specific repo instructions, framework guidance, tool-specific skills, and installed skills. Keep those more specific instructions when they conflict with this skill.
-This skill also applies when the user asks for design-only output (no code changes yet), especially when options and tradeoffs need to be evaluated.
+## 核心原则
 
-This skill combines two ideas into one reusable flow:
+### 1. 先需求，再设计，再编码
 
-1. Do not jump straight into code. Align on the task first, then confirm the design, then implement.
-2. Once implementation starts, keep the solution simple, local, and easy to review.
+当任务并非完全明确时，不要立刻开始编码。
+先澄清真正需要的结果，不断与用户沟通需求，直到你完全理解。
+再选择能满足目标的最小设计。
+最后再实现。
 
-Use the full workflow for non-trivial work. For obvious, low-risk, narrowly-scoped tasks, compress the workflow into a short requirements summary, a one-paragraph design choice, and then implementation.
+### 2. 先思考，再动手
 
-## Priority Order
+在提出改动前先阅读相关文件。
+识别可能的根因、局部约束，以及最小且合理的介入点。
+对于非平凡任务，修改前先给出简短计划。
 
-Follow instructions in this order:
+### 3. 优先简单方案
 
-1. System, developer, and user instructions
-2. More specific installed skills for the current toolchain or task
-3. This skill's workflow and simplicity rules
+选择能完整解决当前请求的最简单方案。
+优先复用现有模式、组件、辅助函数与约定，而不是新增抽象。
+只有在重复或复杂度已经明显需要时，才引入新抽象。
 
-Do not let this skill override direct user requests or repository constraints.
+### 4. 做外科手术式改动
 
-## Core Principles
+在正确解决问题的前提下，让 diff 尽可能小。
+避免无关清理、大范围重命名、格式抖动与猜测性重写。
+除非用户明确要求重构，否则保持现有可运行架构。
 
-### 1. Requirements before design before code
+### 5. 目标驱动
 
-When the task is not completely obvious, do not start coding immediately.
-First clarify what outcome is actually wanted.
-Then choose the smallest design that satisfies it.
-Only then implement.
+每一处代码改动都要与用户目标直接关联。
+除非为保证正确性所必需，否则不要扩展成“顺手优化”。
+存在权衡时，优先选择最易评审、验证和维护的方案。
 
-### 2. Think before coding
+### 6. 为关键代码元素添加中文注释
 
-Read the relevant files before proposing changes.
-Identify the likely root cause, local constraints, and the smallest reasonable place to intervene.
-For non-trivial tasks, state a short plan before editing.
+在编写或修改代码时，请在关键函数、结构体与重要字段上方添加简洁中文注释。
+除非用户或仓库明确要求其他语言，否则这是本 skill 的默认文档要求。
 
-### 3. Prefer simplicity first
+注释范围：
 
-Choose the simplest approach that fully solves the current request.
-Prefer existing patterns, components, helpers, and conventions over new abstractions.
-Introduce a new abstraction only when repetition or complexity clearly justifies it now.
+- 关键函数：说明目的、核心行为和重要副作用
+- 关键结构体/类型：说明职责和主要使用语境
+- 重要字段：在不明显时说明含义、单位/范围或生命周期约束
 
-### 4. Make surgical changes
+注释位置与风格：
 
-Keep the diff as small as possible while still solving the task correctly.
-Avoid unrelated cleanup, broad renames, formatting churn, and speculative rewrites.
-Preserve working architecture unless the user explicitly asks for redesign.
+- 注释放在目标函数、结构体/类型或字段的正上方
+- 使用简洁中文，避免重复名称已表达的信息
+- 优先说明意图与约束，而非逐行复述
+- 行为变化时同步更新注释
+- 对于简单局部变量或显而易见的单行逻辑，可不写注释
 
-### 5. Stay goal-driven
+## 默认工作流
 
-Tie every code change to the user's requested outcome.
-Do not drift into “while I am here” improvements unless they are required for correctness.
-When tradeoffs exist, pick the option that is easiest to review, verify, and maintain.
+### 阶段 1：对齐需求
 
-### 6. Add Chinese comments on key code elements
+首先与用户对齐需求，直到你完全理解他们想要什么，以及为什么想要它。
 
-When writing or modifying code, add concise Chinese comments above key functions, structs, and important fields.
-This is a default documentation requirement for this skill, unless the user or repository explicitly requests another language.
+### 阶段 2：讨论最小可行设计
 
-Comment scope:
+当需求足够清晰后，在改代码前先描述实现路径。
 
-- key functions: explain purpose, core behavior, and important side effects
-- key structs/types: explain responsibility and major usage context
-- important fields: explain meaning, unit/range, or lifecycle constraints when not obvious
+对于非平凡任务，应包含：
 
-Comment placement and style:
+- 可能的根因或实现路径
+- 可能变更的文件或层级
+- 能解决问题的最小设计
+- 至少一个备选方案及其当前不优先的原因
+- 明确权衡（复杂度、风险、交付速度、可维护性）
+- 为什么更大范围方案当前没有必要
 
-- place comments directly above the target function, struct/type, or field
-- use concise Chinese; avoid repeating what the name already says
-- prefer intent and constraints over line-by-line narration
-- keep comments updated when behavior changes
-- for trivial local variables or obvious one-liners, comments are optional
+将设计拆成可快速评审的小块呈现。
+除非用户明确要求，不要一次性输出巨大的规格文档。
 
-## Default Workflow
+### 阶段 3：把设计转成最小实现计划
 
-### Phase 1: Align on requirements
+方案可接受后，把它转成紧凑的执行计划。
 
-Before designing or coding, establish what success means.
+好的计划应当：
 
-For non-trivial tasks:
+- 将工作拆成少量具体步骤
+- 在已知时指明可能涉及的文件或模块
+- 包含验证或测试步骤
+- 细节足够执行，但不过度膨胀成项目管理表演
 
-- restate the task in concrete terms
-- identify missing constraints, assumptions, or acceptance criteria
-- ask focused clarifying questions when the uncertainty is blocking
-- if asking would create too much friction, state the assumptions explicitly and proceed conservatively
+优先小步、可评审的推进，而非冗长且推测性的路线图。
 
-Good requirement outputs are short and testable.
-Avoid vague restatements like “improve architecture” or “make it cleaner.”
-Translate them into specific outcomes.
+如果用户只要设计，请在需求与设计输出后停止。
+在该模式下不要强行改代码；给出包含权衡、假设与清晰下一步的简洁建议即可。
 
-### Phase 2: Discuss the smallest viable design
+### 阶段 4：谨慎实现
 
-After requirements are clear enough, describe the implementation approach before changing code.
+只修改任务所需文件。
+在创建新辅助逻辑前优先复用现有工具。
+除非需求要求变更，否则保持函数签名与公共接口稳定。
+注释与文档若仍准确则保留；行为变化时及时更新。
+对新增或修改的关键函数、结构体/类型及重要字段，在上方补充简洁中文注释。
 
-For non-trivial tasks, include:
+### 阶段 5：验证与汇报
 
-- the likely root cause or implementation approach
-- the files or layers likely to change
-- the smallest design that solves the problem
-- at least one alternative and why it is not preferred right now
-- explicit tradeoffs (complexity, risk, delivery speed, maintainability)
-- why broader alternatives are unnecessary right now
+执行或说明最小且有意义的验证。
+结束时总结：
 
-Present the design in chunks small enough to review quickly.
-Do not dump a giant spec unless the user explicitly wants one.
+- 改了什么
+- 为什么改
+- 如何验证
+- 剩余风险、假设与后续工作
 
-### Phase 3: Turn the design into a minimal implementation plan
+## 压缩规则
 
-Once the approach is acceptable, turn it into a compact execution plan.
+不要为小任务强行套用冗长的“需求-设计-计划”流程。
+若请求已足够具体、低风险且局部，可压缩为：
 
-A good plan:
+1. 简短任务界定
+2. 简短设计选择
+3. 实现与验证
 
-- breaks the work into a few concrete steps
-- names the likely files or modules when known
-- includes validation or test steps
-- is detailed enough to execute, but not bloated into project-management theater
+目标是有意识地执行，而不是流程官僚化。
 
-Prefer small, reviewable steps over long speculative roadmaps.
+## 需要避免的反模式
 
-If the user asks for design only, stop after requirements and design output.
-In that mode, do not force code edits; provide a concise recommendation with tradeoffs, assumptions, and a clear next implementation step.
+### 不要过度设计
 
-### Phase 4: Implement carefully
+除非当前任务明确需要，否则不要引入新架构、插件系统、服务层或通用框架。
+不要为假想的未来功能提前优化。
+不要“以防万一”创建扩展点。
 
-Edit only the files needed for the task.
-Reuse existing helpers before creating new ones.
-Keep function signatures and public interfaces stable unless the request requires otherwise.
-Preserve comments and docs when still accurate; update them when behavior changes.
-For newly added or modified key functions, structs/types, and important fields, add concise Chinese comments above them.
+### 不要过度抽象
 
-### Phase 5: Verify and report
+不要仅为“看起来更干净”而提取辅助函数、基类、hooks、工具层或共享层。
+只有当重复逻辑或现有复杂度确实让局部代码明显变差时，才进行抽象。
+与过早间接层相比，适度重复往往更可取。
 
-Run or describe the smallest meaningful validation available.
-At the end, summarize:
+### 不要过度防御或过度填充
 
-- what changed
-- why it changed
-- how it was verified
-- remaining risks, assumptions, or follow-up work
+除非满足以下条件，否则不要添加兜底分支、配置开关、额外守卫、重试、功能开关或超防御处理：
 
-## Compression Rule
+- 当前需求明确要求
+- 该区域在仓库中已有此类约定
+- 有具体证据表明该故障模式确实存在
 
-Do not force a long requirements-design-plan ceremony for a tiny task.
-If the request is already specific, low-risk, and local, compress the workflow into:
+避免写出主要用于“心理安慰”而非解决任务的代码。
 
-1. a brief task framing
-2. a brief design choice
-3. implementation and verification
+### 不要把规划变成表演
 
-The goal is deliberate execution, not bureaucracy.
+短计划足够时，不要产出超大规格、穷举方案矩阵或冗长实施方案。
+没有真实需要时，不要发明额外阶段、子项目或后续工单。
 
-## Anti-Patterns to Avoid
+## 任务类型指引
 
-### Do not over-design
+### 缺陷修复
 
-Do not introduce a new architecture, plugin system, service layer, or generalized framework unless the present task clearly needs it.
-Do not optimize for hypothetical future features.
-Do not create extension points “just in case.”
+打补丁前先还原故障模式。
+将问题定位到最窄且最可能的原因。
+除非有证据支持，否则避免跨多层“散弹式修复”。
+若无法精确复现，应说明修复所依据的假设。
 
-### Do not over-abstract
+### 功能开发
 
-Do not extract helpers, base classes, hooks, utilities, or shared layers only to make code look cleaner.
-Abstract only when duplicated logic or current complexity makes the local code meaningfully worse.
-Prefer a little duplication over premature indirection.
+先把功能嵌入现有架构，再考虑新架构。
+优先对现有模块、路由、组件与状态流做增量扩展。
+仅新增该功能所需的最小 API 面。
 
-### Do not over-defend or over-pad
+### 重构
 
-Do not add fallback branches, configuration knobs, guards, retries, feature flags, or ultra-defensive handling unless:
+仅在重构能直接支持目标结果或显著降低风险时进行。
+优先提炼、重命名与简化，而非结构性重写。
+除非用户要求改变行为，否则保持行为不变。
 
-- the current requirements call for them
-- the repository already expects them in this area
-- there is concrete evidence of the failure mode being handled
+### 代码评审
 
-Avoid code that exists mainly to soothe anxiety rather than solve the task.
+优先关注正确性、安全性、可靠性与可维护性。
+先指出最高信号的问题。
+优先给出具体且最小的建议，而非泛泛风格评价。
+当改动可接受时，明确说明“可通过”。
 
-### Do not turn planning into theater
+### 测试工作
 
-Do not produce huge specs, exhaustive option matrices, or long implementation plans when a short one would do.
-Do not invent extra phases, subprojects, or follow-up tickets without a real need.
+添加能证明行为变化的最小测试。
+复用现有测试风格、夹具与辅助工具。
+除非仓库已采用或用户明确要求，否则不要引入大型新测试框架。
 
-## Task-Specific Guidance
+### UI 与设计实现
 
-### Bug fixes
+将设计工作视为受现有产品约束的实现任务。
+在发明新布局或交互规则前，先对齐邻近已有模式。
+优先使用现有设计 token、间距尺度、排版体系与共享组件。
+当收到截图、规格或设计说明时：
 
-Reconstruct the failure mode before patching.
-Trace the bug to the narrowest likely cause.
-Avoid shotgun fixes across multiple layers unless evidence supports it.
-If the exact reproduction is unavailable, say what assumption the fix is based on.
+- 识别最关键且最小的可见差异
+- 映射到当前组件结构
+- 以最小改动弥合差距
 
-### Feature work
+不要另起炉灶创造新设计系统。
+不要为“视觉一致性”重做无关页面样式。
+若关键设计上下文缺失，应保守推进并明确假设。
 
-Fit the feature into the existing architecture before inventing a new one.
-Favor incremental extension of current modules, routes, components, and state flows.
-Add only the minimal API surface needed for the feature.
+## 输出风格
 
-### Refactors
+对于非平凡任务，通常按以下顺序输出：
 
-Refactor only when it directly supports the requested outcome or meaningfully reduces risk.
-Prefer extraction, renaming, and simplification over structural rewrites.
-Keep behavior unchanged unless the user asked for behavior changes.
+1. 需求摘要或假设
+2. 最小可行设计
+3. 最小实现计划
+4. 实现与验证结果
 
-### Code review
+各部分保持紧凑。
+优先使用清晰直白的语言，少用术语堆砌。
 
-Prioritize correctness, security, reliability, and maintainability.
-Call out the highest-signal issues first.
-Prefer concrete, minimal suggestions over broad stylistic opinions.
-When a diff is acceptable, say so clearly.
+## 禁止事项
 
-### Test work
+在阅读相关文件前不要开始编码。
+对于非平凡任务，不要跳过需求与设计讨论。
+不要默认引入新抽象。
+不要在同一 diff 中混入无关清理。
+当证据不完整时，不要假装确定。
+不要隐瞒风险、假设或未完成的验证。
 
-Add the narrowest tests that prove the changed behavior.
-Reuse existing test style, fixtures, and helpers.
-Do not add a large new testing harness unless the repository already uses it or the user explicitly asks.
-
-### UI and design implementation
-
-Treat design work as implementation constrained by the existing product.
-Match nearby patterns before inventing new layout or interaction rules.
-Prefer existing design tokens, spacing scales, typography, and shared components.
-When given screenshots, specs, or design notes:
-
-- identify the minimum visible difference that matters
-- map it to the current component structure
-- implement the smallest change that closes that gap
-
-Do not invent a new design system.
-Do not restyle unrelated screens for visual consistency.
-If important design context is missing, proceed conservatively and state the assumptions.
-
-## Output Style
-
-For non-trivial tasks, usually present work in this order:
-
-1. requirements summary or assumptions
-2. smallest viable design
-3. minimal implementation plan
-4. implementation and verification result
-
-Keep each section compact.
-Prefer plain language over jargon.
-
-## Do Not
-
-Do not start coding before reading the relevant files.
-Do not skip requirements and design discussion on non-trivial work.
-Do not introduce new abstractions by default.
-Do not mix unrelated cleanup into the same diff.
-Do not claim certainty when the evidence is partial.
-Do not hide risk, assumptions, or skipped verification.
-
-## Resources
-
-Use these bundled references when needed:
-
-- `references/prompt-patterns.md` for example prompts that trigger this skill well
-- `references/repo-reinforcement.md` for guidance on pairing this skill with a repository-level `AGENTS.md`
-- `references/workflow-patterns.md` for sample requirement, design, and plan formats
-- `assets/AGENTS.md.example` as a copyable repo-local companion file
