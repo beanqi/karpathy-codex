@@ -22,9 +22,8 @@ Use the full workflow for non-trivial work. For obvious, low-risk, narrowly-scop
 Follow instructions in this order:
 
 1. System, developer, and user instructions
-2. Repository-specific guidance such as `AGENTS.md`, `README`, contribution docs, and test commands
-3. More specific installed skills for the current toolchain or task
-4. This skill's workflow and simplicity rules
+2. More specific installed skills for the current toolchain or task
+3. This skill's workflow and simplicity rules
 
 Do not let this skill override direct user requests or repository constraints.
 
@@ -60,6 +59,25 @@ Preserve working architecture unless the user explicitly asks for redesign.
 Tie every code change to the user's requested outcome.
 Do not drift into “while I am here” improvements unless they are required for correctness.
 When tradeoffs exist, pick the option that is easiest to review, verify, and maintain.
+
+### 6. Add Chinese comments on key code elements
+
+When writing or modifying code, add concise Chinese comments above key functions, structs, and important fields.
+This is a default documentation requirement for this skill, unless the user or repository explicitly requests another language.
+
+Comment scope:
+
+- key functions: explain purpose, core behavior, and important side effects
+- key structs/types: explain responsibility and major usage context
+- important fields: explain meaning, unit/range, or lifecycle constraints when not obvious
+
+Comment placement and style:
+
+- place comments directly above the target function, struct/type, or field
+- use concise Chinese; avoid repeating what the name already says
+- prefer intent and constraints over line-by-line narration
+- keep comments updated when behavior changes
+- for trivial local variables or obvious one-liners, comments are optional
 
 ## Default Workflow
 
@@ -111,6 +129,7 @@ Edit only the files needed for the task.
 Reuse existing helpers before creating new ones.
 Keep function signatures and public interfaces stable unless the request requires otherwise.
 Preserve comments and docs when still accurate; update them when behavior changes.
+For newly added or modified key functions, structs/types, and important fields, add concise Chinese comments above them.
 
 ### Phase 5: Verify and report
 
